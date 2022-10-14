@@ -1,119 +1,67 @@
-import { Title, Text, Container, Button, Overlay, createStyles } from '@mantine/core';
-import Link from "next/link"
+import { useForm } from '@mantine/form';
+import {
+  TextInput,
+  PasswordInput,
+  Text,
+  createStyles,
+  Button
+} from '@mantine/core';
 
-const useStyles = createStyles((theme) => ({
-  wrapper: {
-    position: 'relative',
-    paddingTop: 180,
-    paddingBottom: 130,
-    backgroundImage:
-      'url(https://images.unsplash.com/photo-1573164713988-8665fc963095?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=980&q=80)',
-    backgroundSize: 'cover',
-    backgroundPosition: 'center',
-
-    '@media (max-width: 520px)': {
-      paddingTop: 80,
-      paddingBottom: 50,
-    },
-  },
-
-  inner: {
-    position: 'relative',
-    zIndex: 1,
-  },
-
-  title: {
-    fontWeight: 800,
-    fontSize: 40,
-    letterSpacing: -1,
-    paddingLeft: theme.spacing.md,
-    paddingRight: theme.spacing.md,
-    color: theme.white,
-    marginBottom: theme.spacing.xs,
-    textAlign: 'center',
-    fontFamily: `Greycliff CF, ${theme.fontFamily}`,
-
-    '@media (max-width: 520px)': {
-      fontSize: 28,
-      textAlign: 'left',
-    },
-  },
-
-  highlight: {
-    color: theme.colors[theme.primaryColor][4],
-  },
-
-  description: {
-    color: theme.colors.gray[0],
-    textAlign: 'center',
-
-    '@media (max-width: 520px)': {
-      fontSize: theme.fontSizes.md,
-      textAlign: 'left',
-    },
-  },
-
-  controls: {
-    marginTop: theme.spacing.xl * 1.5,
-    display: 'flex',
-    justifyContent: 'center',
-    paddingLeft: theme.spacing.md,
-    paddingRight: theme.spacing.md,
-
-    '@media (max-width: 520px)': {
-      flexDirection: 'column',
-    },
-  },
-
-  control: {
-    height: 42,
-    fontSize: theme.fontSizes.md,
-
-    '&:not(:first-of-type)': {
-      marginLeft: theme.spacing.md,
-    },
-
-    '@media (max-width: 520px)': {
-      '&:not(:first-of-type)': {
-        marginTop: theme.spacing.md,
-        marginLeft: 0,
-      },
-    },
-  },
-
-  secondaryControl: {
-    color: theme.white,
-    backgroundColor: 'rgba(255, 255, 255, .4)',
-
-    '&:hover': {
-      backgroundColor: 'rgba(255, 255, 255, .45) !important',
-    },
-  },
+const useStyles = createStyles(() => ({
+  form: {
+    maxWidth: "500px",
+    padding: "50px 50px",
+  }
 }));
 
-function HeroImageBackground() {
-  const { classes, cx } = useStyles();
+function AuthenticationForm() {
 
-  return (
-    <div className={classes.wrapper}>
-      <Overlay color="#000" opacity={0.65} zIndex={1} />
+  const { classes } = useStyles();
 
-      <div className={classes.inner}>
-        <Title className={classes.title}>
-          Best library to get 
-          <Text component="span" inherit className={classes.highlight}>
-            any book
-          </Text>
-        </Title>
+  const form = useForm({
+    initialValues: {
+      email: '',
+      name: '',
+      password: '',
+      terms: true,
+    },
 
-        <div className={classes.controls}>
-          <Button className={classes.control} variant="white" size="lg">
-            <Link href='/register'>Get started</Link>
-          </Button>
-        </div>
+    validate: {
+      email: (val) => (/^\S+@\S+$/.test(val) ? null : 'Invalid email'),
+      password: (val) => (val.length <= 6 ? 'Password should include at least 6 characters' : null),
+    },
+  });
+
+  return (<div className={classes.form}>
+      <Text size="lg" weight={500}>
+        Welcome to Ellipsis Library,
+      </Text>
+
+      <form onSubmit={form.onSubmit(() => {})}>
+
+          <TextInput
+            required
+            label="Email"
+            placeholder="hello@library.com"
+            value={form.values.email}
+            onChange={(event) => form.setFieldValue('email', event.currentTarget.value)}
+            error={form.errors.email && 'Invalid email'}
+          />
+
+          <PasswordInput
+            required
+            label="Password"
+            placeholder="Your password"
+            value={form.values.password}
+            onChange={(event) => form.setFieldValue('password', event.currentTarget.value)}
+            error={form.errors.password && 'Password should include at least 6 characters'}
+          />
+
+          <Button type="submit">Log in</Button>
+
+      </form>
       </div>
-    </div>
   );
 }
 
-export default HeroImageBackground;
+export default AuthenticationForm;
