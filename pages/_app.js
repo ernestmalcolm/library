@@ -1,10 +1,12 @@
-import '../styles/globals.css'
-import { MantineProvider } from '@mantine/core'
+import "../styles/globals.css";
+import { MantineProvider } from "@mantine/core";
 
 function MyApp({ Component, pageProps }) {
   return (
-  <MantineProvider><Component {...pageProps} /></MantineProvider>
+    <MantineProvider>
+      <Component {...pageProps} />
+    </MantineProvider>
   );
 }
 
-export default MyApp
+export default MyApp;
